@@ -26,13 +26,34 @@
 		$stmt->bindParam(1, $this->Team_ID);
 		
 		$stmt->execute();
-		$row=$stmt->fetch(PDO::FETH_ASSOC);
+		$row=$stmt->fetch(PDO::FETCH_ASSOC);
 		$this->Team_ID=$row['Team_ID'];
 		$this->Team_Name=$row['Team_Name'];
 		$this->Host_City=$row['Host_City'];
 		$this->Owner_Name=$row['Owner_Name'];
 		
 		
+	}
+	public function create(){
+		$query="insert into ".$this->table." set Team_ID = :team_id, Team_Name = :team_name, Host_City = :host_city, Owner_Name = :owner_name";
+		$stmt=$this->conn->prepare($query);
+		
+		$this->Team_ID=htmlspecialchars(strip_tags($this->Team_ID));
+		$this->Team_Name=htmlspecialchars(strip_tags($this->Team_Name));
+		$this->Host_City=htmlspecialchars(strip_tags($this->Host_City));
+		$this->Owner_Name=htmlspecialchars(strip_tags($this->Owner_Name));
+		
+		$stmt->bindParam(':team_id', $this->Team_ID);
+		$stmt->bindParam(':team_name', $this->Team_Name);
+		$stmt->bindParam(':host_city', $this->Host_City);
+		$stmt->bindParam(':owner_name', $this->Owner_Name);
+		
+		if($stmt->execute()){
+			return true;
+		}
+		
+		echo "Error : ".$stmt->error;
+		return false;
 	}
  }
 
